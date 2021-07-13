@@ -4,7 +4,7 @@
   "description": "A Discord bot that allows people leave their opinions!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "KimPlayz4LK",
