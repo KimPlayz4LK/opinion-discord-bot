@@ -5,7 +5,7 @@ const http=require("http");
 const socketio_client=require("socket.io-client");
 require("dotenv");
 
-const prefix="^";
+const prefix=process.env.prefix||"^";
 
 client.once("ready",async()=>{
 console.log(`Logged-in as ${client.user.tag}`);
