@@ -54,6 +54,7 @@ message.channel.send(`||${message.author}||`,embed);}
 }else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Invalid usage | :x:`).setDescription(`Please provide a message ID (must be in the same channel) in order to use this command.`);message.channel.send(`||${message.author}||`,embed);
 }}
 if(command.toLowerCase().startsWith("thumbsall")){
+if(message.guild.member(message.author).hasPermission("MANAGE_CHANNELS")){
 await message.channel.messages.fetch().then(messages=>{messages.forEach(m=>{m.react("👍");m.react("👎");});});
 }else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Insufficient permissions | :x:`).setDescription(`You cannot do this to that message. The message must be sent by you or you must have the _Manage channels_ permission.`);message.channel.send(`||${message.author}||`,embed);}
 }
