@@ -135,7 +135,6 @@ message.channel.send(`||${message.author}||`,embed);
 }});
 client.on("messageReactionAdd",async(reaction,user)=>{
 if(reaction.partial){try{await reaction.fetch();}catch(error){return;}}
-console.log(user.bot);
 if(reaction.message.author.id==client.user.id){
 if(reaction.message.embeds[0].footer.text.startsWith(`Vote posted by `)){
 if(reaction._emoji.name=="👍"&&!user.bot){reaction.message.reactions.cache.find(r=>r._emoji.name==="👎").users.remove(user.id);}
@@ -174,7 +173,7 @@ var embed=new Discord.MessageEmbed()
 .addField("Server owner ID",owner.id)
 .addField("Server ID",guild.id)
 .addField("Server region",guild.region);
-_owners.forEach(owner=>{var user=await client.users.fetch(owner);user.send(embed);});
+_owners.forEach(async owner=>{var user=await client.users.fetch(owner);user.send(embed);});
 });
 client.on("guildDelete",async(guild)=>{
 var owner=await client.users.fetch(guild.ownerID.toString());
@@ -188,7 +187,7 @@ var embed=new Discord.MessageEmbed()
 .addField("Server owner ID",owner.id)
 .addField("Server ID",guild.id)
 .addField("Server region",guild.region);
-_owners.forEach(owner=>{var user=await client.users.fetch(owner);user.send(embed);});
+_owners.forEach(async owner=>{var user=await client.users.fetch(owner);user.send(embed);});
 });
 
 client.login(process.env.token);
