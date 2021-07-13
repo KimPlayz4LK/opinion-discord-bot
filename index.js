@@ -6,6 +6,7 @@ const socketio_client=require("socket.io-client");
 require("dotenv");
 
 const prefix=process.env.prefix||"^";
+const _owners=process.env.owners?process.env.owners.split(","):["748531954391056445"];
 
 client.once("ready",async()=>{
 console.log(`Logged-in as ${client.user.tag}`);
@@ -36,7 +37,8 @@ var embed=new Discord.MessageEmbed()
 {name:"`vote`",value:`This will make a new vote so people can upvote or downvote your message. You can create a channel named _votes_, and all votes will be sent there. Othervise, the vote will be sent in the current channel.\r\n**Usage**: \`${prefix}vote <your message>\`\r\n**Example**: \`${prefix}vote Should i add the bot to the server?\`\r\n**Requirements**: Must have the _Vote maker_ role.`,inline:true},
 {name:"`poll`",value:`It will make a new poll, with up to 10 options. You can create a channel named _polls_, and all polls will be posted there. Othervise, it will be posted in the current channel.\r\n**Usage**: \`${prefix}poll <"question"> <"option 1"> ["option 2"] ["option 3"]\`\r\n**Example**: \`${prefix}poll "What is your favorite color?" "Red" "Yellow" "Green" "Blue" "Purple"\`\r\n**Example 2**: \`${prefix}poll "What is your favorite color?"Red"Yellow"Green"Blue"Purple"\`\r\n**Requirements**: Must have the _Poll maker_ role.`,inline:true},
 {name:"`invite`",value:`The bot will send some invite links\r\n**Usage**: \`${prefix}invite\`\r\n`,inline:true},
-{name:"`support`",value:`Will send the support information such as the support server invite link and bot creator's username\r\n**Usage**: \`${prefix}support\`\r\n`,inline:true}
+{name:"`support`",value:`Will send the support information such as the support server invite link and bot creator's username\r\n**Usage**: \`${prefix}support\`\r\n`,inline:true},
+{name:"`thumbsAll`",value:`This will but a thumbsup :thumbsup: and a thumbsdown :thumbsdown: reactions to all messages in the current channel.\r\n**Usage**: \`${prefix}thumbsAll\`\r\n**Requirements**: Must have the _Manage channels_ permission.`,inline:true}
 );
 message.channel.send(`||${message.author}||`,embed);
 }
@@ -51,6 +53,10 @@ message.channel.send(`||${message.author}||`,embed);}
 }else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Invalid message ID | :x:`).setDescription(`Please provide a valid message ID (must be in the same channel).`);message.channel.send(`||${message.author}||`,embed);}
 }else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Invalid usage | :x:`).setDescription(`Please provide a message ID (must be in the same channel) in order to use this command.`);message.channel.send(`||${message.author}||`,embed);
 }}
+if(command.toLowerCase().startsWith("thumbsall")){
+await message.channel.messages.fetch().then(messages=>{messages.forEach(m=>{m.react("👍");m.react("👎");});});
+}else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Insufficient permissions | :x:`).setDescription(`You cannot do this to that message. The message must be sent by you or you must have the _Manage channels_ permission.`);message.channel.send(`||${message.author}||`,embed);}
+}
 
 if(command.toLowerCase().startsWith("vote ")){
 var pingRole=message.guild.roles.cache.find(role=>role.name==="Vote ping");
@@ -67,7 +73,7 @@ if(message.channel.name!=="votes")message.channel.send(`||${message.author}||`,e
 }
 
 if(command.toLowerCase().startsWith(`:eval `)){
-if(message.author.id==748531954391056445){
+if(_owners.includes(message.author.id.toString())){
 try{var result=await eval(message.content.substring(prefix.length+6,message.content.length));
 var obj=result;
 if(typeof result=="object"&&result!=null){
@@ -126,7 +132,6 @@ message.channel.send(`||${message.author}||`,embed);
 }
 
 }});
-
 client.on("messageReactionAdd",async(reaction,user)=>{
 if(reaction.partial){try{await reaction.fetch();}catch(error){return;}}
 console.log(user.bot);
@@ -143,7 +148,6 @@ if(reaction.message.embeds[0].color==embed.color){edit=false;}
 if(edit){reaction.message.edit(reaction.message.content,embed);}
 }
 }});
-
 client.on("messageReactionRemove",async(reaction,user)=>{
 if(reaction.partial){try{await reaction.fetch();}catch(error){return;}}
 if(reaction.message.author.id==client.user.id&&user.bot==false){
@@ -157,5 +161,33 @@ if(reaction.message.embeds[0].color==embed.color){edit=false;}
 if(edit){reaction.message.edit(reaction.message.content,embed);}
 }
 }});
+client.on("guildCreate",async(guild)=>{
+var owner=await client.users.fetch(guild.ownerID.toString());
+var embed=new Discord.MessageEmbed()
+.setColor('#0ba9d9')
+.setTitle(":inbox_tray: | I've joined a server")
+.setDescription("Someone invited me to a server")
+.addField("Server name",guild.name)
+.addField("Server member count",guild.memberCount)
+.addField("Server owner",`\`${owner.username}#${owner.discriminator}\``)
+.addField("Server owner ID",owner.id)
+.addField("Server ID",guild.id)
+.addField("Server region",guild.region);
+_owners.forEach(owner=>{var user=await client.users.fetch(owner);user.send(embed);});
+});
+client.on("guildDelete",async(guild)=>{
+var owner=await client.users.fetch(guild.ownerID.toString());
+var embed=new Discord.MessageEmbed()
+.setColor('#0ba9d9')
+.setTitle(":outbox_tray: | I've leaved a server")
+.setDescription("Someone removed me from a server")
+.addField("Server name",guild.name)
+.addField("Server member count",guild.memberCount)
+.addField("Server owner",`\`${owner.username}#${owner.discriminator}\``)
+.addField("Server owner ID",owner.id)
+.addField("Server ID",guild.id)
+.addField("Server region",guild.region);
+_owners.forEach(owner=>{var user=await client.users.fetch(owner);user.send(embed);});
+});
 
 client.login(process.env.token);
