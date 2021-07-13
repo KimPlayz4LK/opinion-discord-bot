@@ -129,10 +129,11 @@ message.channel.send(`||${message.author}||`,embed);
 
 client.on("messageReactionAdd",async(reaction,user)=>{
 if(reaction.partial){try{await reaction.fetch();}catch(error){return;}}
+console.log(user.bot);
 if(reaction.message.author.id==client.user.id){
 if(reaction.message.embeds[0].footer.text.startsWith(`Vote posted by `)){
-if(reaction._emoji.name=="👍"){reaction.message.reactions.cache.find(r=>r._emoji.name==="👎").users.remove(user.id);}
-if(reaction._emoji.name=="👎"){reaction.message.reactions.cache.find(r=>r._emoji.name==="👍").users.remove(user.id);}
+if(reaction._emoji.name=="👍"&&!user.bot){reaction.message.reactions.cache.find(r=>r._emoji.name==="👎").users.remove(user.id);}
+if(reaction._emoji.name=="👎"&&!user.bot){reaction.message.reactions.cache.find(r=>r._emoji.name==="👍").users.remove(user.id);}
 var upvotes=reaction.message.reactions.cache.find(r=>r._emoji.name==="👍").count;
 var downvotes=reaction.message.reactions.cache.find(r=>r._emoji.name==="👎").count;
 var embed=new Discord.MessageEmbed().setTitle(reaction.message.embeds[0].title).setFooter(reaction.message.embeds[0].footer.text);
@@ -145,7 +146,7 @@ if(edit){reaction.message.edit(reaction.message.content,embed);}
 
 client.on("messageReactionRemove",async(reaction,user)=>{
 if(reaction.partial){try{await reaction.fetch();}catch(error){return;}}
-if(reaction.message.author.id==client.user.id){
+if(reaction.message.author.id==client.user.id&&user.bot==false){
 if(reaction.message.embeds[0].footer.text.startsWith(`Vote posted by `)){
 var upvotes=reaction.message.reactions.cache.find(r=>r._emoji.name==="👍").count;
 var downvotes=reaction.message.reactions.cache.find(r=>r._emoji.name==="👎").count;
@@ -157,4 +158,4 @@ if(edit){reaction.message.edit(reaction.message.content,embed);}
 }
 }});
 
-client.login(process.env.token);
+client.login("ODY0MjU4OTAxODA4MzgxOTYz.YOy10w.aLEZPrKY65coKqvHm-wQxk5Yii8");
