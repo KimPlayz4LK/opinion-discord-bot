@@ -1,0 +1,21 @@
+{
+  "name": "opinion",
+  "version": "1.0.0",
+  "description": "A Discord bot that allows people leave their opinions!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "KimPlayz4LK",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.2",
+    "ws": "^7.5.2"
+  }
+}
