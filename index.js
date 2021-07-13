@@ -109,7 +109,7 @@ var embed=new Discord.MessageEmbed()
 .setTitle("Support | :passport_control:")
 .setFooter("Support | Opinion")
 .addFields(
-{name:"[Discord server](https://discord.gg/VpBAM9DHCx)",value:`Click the link to join the support Discord server`,inline:true},
+{name:"Discord support server",value:`[Discord server](https://discord.gg/VpBAM9DHCx)`,inline:true},
 {name:"Contact the creator",value:`\`KimPlayz4LK#3433\``,inline:true}
 );
 message.channel.send(`||${message.author}||`,embed);
@@ -118,10 +118,9 @@ message.channel.send(`||${message.author}||`,embed);
 if(command.toLowerCase().startsWith("inv")){
 var embed=new Discord.MessageEmbed()
 .setColor("#0077dd")
-.setTitle("Invite | :enveloppe:")
-.setFooter("Invite | Opinion")
+.setTitle("Invite | :envelope:")
 .addFields(
-{name:"[Invite link](https://discord.com/oauth2/authorize?client_id=864258901808381963&permissions=2953194616&scope=bot)",value:`Click the link above to invite the bot to your server!`,inline:true}
+{name:"Invite the bot using the link below:",value:`[Invite link](https://discord.com/oauth2/authorize?client_id=864258901808381963&permissions=2953194616&scope=bot)`,inline:true}
 );
 message.channel.send(`||${message.author}||`,embed);
 }
