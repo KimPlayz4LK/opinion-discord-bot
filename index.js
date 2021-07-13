@@ -158,4 +158,4 @@ if(edit){reaction.message.edit(reaction.message.content,embed);}
 }
 }});
 
-client.login("ODY0MjU4OTAxODA4MzgxOTYz.YOy10w.aLEZPrKY65coKqvHm-wQxk5Yii8");
+client.login(process.env.token);
