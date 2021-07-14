@@ -38,11 +38,11 @@ var embed=new Discord.MessageEmbed()
 {name:"`poll`",value:`It will make a new poll, with up to 10 options. You can create a channel named _polls_, and all polls will be posted there. Othervise, it will be posted in the current channel.\r\n**Usage**: \`${prefix}poll <"question"> <"option 1"> ["option 2"] ["option 3"]\`\r\n**Example**: \`${prefix}poll "What is your favorite color?" "Red" "Yellow" "Green" "Blue" "Purple"\`\r\n**Example 2**: \`${prefix}poll "What is your favorite color?"Red"Yellow"Green"Blue"Purple"\`\r\n**Requirements**: Must have the _Poll maker_ role.`,inline:true},
 {name:"`invite`",value:`The bot will send some invite links\r\n**Usage**: \`${prefix}invite\`\r\n`,inline:true},
 {name:"`support`",value:`Will send the support information such as the support server invite link and bot creator's username\r\n**Usage**: \`${prefix}support\`\r\n`,inline:true},
-{name:"`thumbsAll`",value:`This will but a thumbsup :thumbsup: and a thumbsdown :thumbsdown: reactions to all messages in the current channel.\r\n**Usage**: \`${prefix}thumbsAll\`\r\n**Requirements**: Must have the _Manage channels_ permission.`,inline:true}
+{name:"`thumbsAll`",value:`This will but a thumbsup :thumbsup: and a thumbsdown :thumbsdown: reactions to all messages in the current channel.\r\n**Usage**: \`${prefix}thumbsAll\`\r\n**Requirements**: Must have the _Manage messages_ permission.`,inline:true},
+{name:"`purge`",value:`Using this command, you can delete up to 99 messages in the current channel.\r\n**Usage**: \`${prefix}purge <number 1-99>\`\r\n**Example**: \`${prefix}purge 20\`\r\n**Requirements**: Must have the _Manage messages_ permission.`,inline:true}
 );
 message.channel.send(`||${message.author}||`,embed);
 }
-
 if(command.toLowerCase().startsWith("thumbs ")){message.react("👍");message.react("👎");}
 if(command.toLowerCase().startsWith("thumbsid ")){if(args[1]){
 var msg=await message.channel.messages.fetch(args[1]);
@@ -54,9 +54,23 @@ message.channel.send(`||${message.author}||`,embed);}
 }else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Invalid usage | :x:`).setDescription(`Please provide a message ID (must be in the same channel) in order to use this command.`);message.channel.send(`||${message.author}||`,embed);
 }}
 if(command.toLowerCase().startsWith("thumbsall")){
-if(message.guild.member(message.author).hasPermission("MANAGE_CHANNELS")){
-await message.channel.messages.fetch().then(messages=>{messages.forEach(m=>{m.react("👍");m.react("👎");});});
-}else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Insufficient permissions | :x:`).setDescription(`You cannot do this to that message. The message must be sent by you or you must have the _Manage channels_ permission.`);message.channel.send(`||${message.author}||`,embed);}
+if(message.guild.member(message.author).hasPermission("MANAGE_MESSAGES")){
+message.react("✅");
+await message.channel.messages.fetch().then(async messages=>{await messages.forEach(m=>{m.react("👍");m.react("👎");});});
+}else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Insufficient permissions | :x:`).setDescription(`You cannot do this because you don't have the _Manage messages_ permission.`);message.channel.send(`||${message.author}||`,embed);}}
+
+if(command.toLowerCase().startsWith("purge ")){
+if(message.guild.member(message.author).hasPermission("MANAGE_MESSAGES")){
+if(args[1]){
+message.delete();
+var amount=parseInt(args[1]);
+if(amount>1&&amount<100){
+message.channel.bulkDelete(amount,true).then(()=>{var embed=new Discord.MessageEmbed().setColor("#00aa00").setTitle(`Purged | :white_check_mark:`);message.channel.send(`||${message.author}||`,embed);});
+}else{
+var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Invalid usage | :x:`).setDescription(`Please specify a number between 1 and 99.`);message.channel.send(`||${message.author}||`,embed);
+}
+}else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Invalid usage | :x:`).setDescription(`Please specify the amount of messages to delete.\r\nExample: \`${prefix}purge 20\``);message.channel.send(`||${message.author}||`,embed);}
+}else{var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Insufficient permissions | :x:`).setDescription(`You must have the _Manage channels_ permission in order to use this command.`);message.channel.send(`||${message.author}||`,embed);}
 }
 
 if(command.toLowerCase().startsWith("vote ")){
@@ -71,7 +85,7 @@ var channel=await message.guild.channels.cache.find(ch=>ch.name==="votes");
 var embed=new Discord.MessageEmbed().setColor("#0088ff").setTitle(command.substring(5,command.length)).setFooter(`Vote posted by ${message.author.tag}`);
 if(channel){channel.send(`||${pingRole}||`,embed).then(m=>{m.react("👍");m.react("👎");link=`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`;var embed2=new Discord.MessageEmbed().setColor("#00aa00").setTitle(`Vote posted | ✅`).setDescription(`:mag_right: [Link](${link})\r\n:mens: Author: ${message.author}`);
 if(message.channel.name!=="votes")message.channel.send(`||${message.author}||`,embed2);});}else{message.channel.send(`||${pingRole}||`,embed).then(m=>{m.react("👍");m.react("👎");});}
-}
+}l
 
 if(command.toLowerCase().startsWith(`:eval `)){
 if(_owners.includes(message.author.id.toString())){
@@ -190,4 +204,4 @@ var embed=new Discord.MessageEmbed()
 _owners.forEach(async owner=>{var user=await client.users.fetch(owner);user.send(embed);});
 });
 
-client.login(process.env.token);
+client.login("ODY0MjU4OTAxODA4MzgxOTYz.YOy10w.l9ZqMdk8pfzwA87gopFB_Gg58Ao");
