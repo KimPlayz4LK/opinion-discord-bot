@@ -204,4 +204,4 @@ var embed=new Discord.MessageEmbed()
 _owners.forEach(async owner=>{var user=await client.users.fetch(owner);user.send(embed);});
 });
 
-client.login("ODY0MjU4OTAxODA4MzgxOTYz.YOy10w.l9ZqMdk8pfzwA87gopFB_Gg58Ao");
+client.login(process.env.token);
