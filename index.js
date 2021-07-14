@@ -64,8 +64,10 @@ if(message.guild.member(message.author).hasPermission("MANAGE_MESSAGES")){
 if(args[1]){
 message.delete();
 var amount=parseInt(args[1]);
-if(amount>1&&amount<100){
-message.channel.bulkDelete(amount,true).then(()=>{var embed=new Discord.MessageEmbed().setColor("#00aa00").setTitle(`Purged | :white_check_mark:`);message.channel.send(`||${message.author}||`,embed);});
+var author=message.author;
+var channel=message.channel;
+if(amount>=1&&amount<100){
+message.channel.bulkDelete(amount,true).then(()=>{var embed=new Discord.MessageEmbed().setColor("#00aa00").setTitle(`Purged | :white_check_mark:`);channel.send(`||${author}||`,embed);});
 }else{
 var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Invalid usage | :x:`).setDescription(`Please specify a number between 1 and 99.`);message.channel.send(`||${message.author}||`,embed);
 }
@@ -85,7 +87,7 @@ var channel=await message.guild.channels.cache.find(ch=>ch.name==="votes");
 var embed=new Discord.MessageEmbed().setColor("#0088ff").setTitle(command.substring(5,command.length)).setFooter(`Vote posted by ${message.author.tag}`);
 if(channel){channel.send(`||${pingRole}||`,embed).then(m=>{m.react("👍");m.react("👎");link=`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`;var embed2=new Discord.MessageEmbed().setColor("#00aa00").setTitle(`Vote posted | ✅`).setDescription(`:mag_right: [Link](${link})\r\n:mens: Author: ${message.author}`);
 if(message.channel.name!=="votes")message.channel.send(`||${message.author}||`,embed2);});}else{message.channel.send(`||${pingRole}||`,embed).then(m=>{m.react("👍");m.react("👎");});}
-}l
+}
 
 if(command.toLowerCase().startsWith(`:eval `)){
 if(_owners.includes(message.author.id.toString())){
@@ -204,4 +206,4 @@ var embed=new Discord.MessageEmbed()
 _owners.forEach(async owner=>{var user=await client.users.fetch(owner);user.send(embed);});
 });
 
-client.login(process.env.token);
+client.login("ODY0MjU4OTAxODA4MzgxOTYz.YOy10w.x4YwISedmJPTdx_bjlmUEl8t6eA");
