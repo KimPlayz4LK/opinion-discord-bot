@@ -29,7 +29,7 @@ var embed=new Discord.MessageEmbed()
 .setColor("#0077dd")
 .setTitle("Help/Commands | :passport_control:")
 .setFooter("Help/Commands | Opinion")
-.setDescription(`Here's a list of commands you can use:\r\nThe < and > means mandatory values\r\nAnd [ and ] means optional values`)
+.setDescription(`Here's a list of commands you can use:\r\n\`<\` and \`>\` means mandatory values\r\n\`[\` and \`]\` means optional values\r\n\`|\` means a choice.`)
 .addFields(
 {name:"`help`",value:`Will retrieve you a list of commands.\r\n**Usage**: \`${prefix}help\``,inline:true},
 {name:"`thumbs`",value:`Will put a thumbsup :thumbsup: and a thumbsdown :thumbsdown: reactions to the message.\r\n**Usage**: \`${prefix}thumbs <your message>\`\r\n**Example**: \`${prefix}thumbs Do you like the bot?\``,inline:true},
@@ -39,7 +39,8 @@ var embed=new Discord.MessageEmbed()
 {name:"`invite`",value:`The bot will send some invite links\r\n**Usage**: \`${prefix}invite\`\r\n`,inline:true},
 {name:"`support`",value:`Will send the support information such as the support server invite link and bot creator's username\r\n**Usage**: \`${prefix}support\`\r\n`,inline:true},
 {name:"`thumbsAll`",value:`This will but a thumbsup :thumbsup: and a thumbsdown :thumbsdown: reactions to all messages in the current channel.\r\n**Usage**: \`${prefix}thumbsAll\`\r\n**Requirements**: Must have the _Manage messages_ permission.`,inline:true},
-{name:"`purge`",value:`Using this command, you can delete up to 99 messages in the current channel.\r\n**Usage**: \`${prefix}purge <number 1-99>\`\r\n**Example**: \`${prefix}purge 20\`\r\n**Requirements**: Must have the _Manage messages_ permission.`,inline:true}
+{name:"`purge`",value:`Using this command, you can delete up to 99 messages in the current channel.\r\n**Usage**: \`${prefix}purge <number 1-99>\`\r\n**Example**: \`${prefix}purge 20\`\r\n**Requirements**: Must have the _Manage messages_ permission.`,inline:true},
+{name:"`togglePing` (in short: \`togg\`)",value:`You can toggle pings (mentions) with this command.\r\n**Usage**: \`${prefix}togglePing <poll|vote>\`\r\n**Example**: \`${prefix}togg p\` (This will toggle the poll ping)`,inline:true}
 );
 message.channel.send(`||${message.author}||`,embed);
 }
@@ -147,6 +148,44 @@ var embed=new Discord.MessageEmbed()
 );
 message.channel.send(`||${message.author}||`,embed);
 }
+
+if(command.toLowerCase().startsWith("togg")){
+var pollPing=message.guild.roles.cache.find(role=>role.name==="Poll ping");
+var votePing=message.guild.roles.cache.find(role=>role.name==="Vote ping");
+
+if(!pollPing||!votePing){
+var desc=`The server should have role(s) named`;
+if(!pp)desc=desc+" `Poll ping`";
+if(!vp)desc=desc+" `Vote ping`";
+var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Role(s) not found | :x:`).setDescription(desc+".");
+message.channel.send(`||${message.author}||`,embed);
+return;}
+
+if(args[1]){
+var member=await message.guild.members.cache.get(message.author.id);
+if(args[1].startsWith("p")){
+if(member.roles.cache.some(r=>r.name==="Poll ping")){
+member.roles.remove(pollPing);
+var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Poll ping off`).setDescription(`You will no longer receive new poll pings. (${pollPing})`);
+message.channel.send(`||${message.author}||`,embed);
+}else{
+message.member.roles.add(pollPing);
+var embed=new Discord.MessageEmbed().setColor("#00aa00").setTitle(`Poll ping on`).setDescription(`You will now receive new poll pings. (${pollPing})`);
+message.channel.send(`||${message.author}||`,embed);}}
+
+if(args[1].startsWith("v")){
+if(member.roles.cache.some(r=>r.name==="Vote ping")){
+member.roles.remove(votePing);
+var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Vote ping off`).setDescription(`You will no longer receive new vote pings. (${votePing})`);
+message.channel.send(`||${message.author}||`,embed);
+}else{
+message.member.roles.add(votePing);
+var embed=new Discord.MessageEmbed().setColor("#00aa00").setTitle(`Vote ping on`).setDescription(`You will now receive new vote pings. (${votePing})`);
+message.channel.send(`||${message.author}||`,embed);}}
+}else{
+var embed=new Discord.MessageEmbed().setColor("#aa0000").setTitle(`Invalid usage | :x:`).setDescription(`Please specify the correct ping name.\r\n\`vote\` to toggle vote pings, \`poll\` to toggle poll pings.\r\n**Example**: \`${prefix}togglePing poll\``);
+message.channel.send(`||${message.author}||`,embed);
+}}
 
 }});
 client.on("messageReactionAdd",async(reaction,user)=>{
